@@ -30,7 +30,9 @@ public class Utils {
         if (count == 1){
           jsonObject = jsonObject.getJSONObject("results")
               .getJSONObject("quote");
-          batchOperations.add(buildBatchOperation(jsonObject));
+          ContentProviderOperation operation = buildBatchOperation(jsonObject);
+          if (operation != null)
+            batchOperations.add(operation);
         } else{
           resultsArray = jsonObject.getJSONObject("results").getJSONArray("quote");
 
@@ -71,6 +73,12 @@ public class Utils {
   }
 
   public static ContentProviderOperation buildBatchOperation(JSONObject jsonObject){
+    // invalid quote will have null Bid field in the JSONObject
+    if (jsonObject.isNull("Bid")) {
+      Log.d("NGUYEN", "JSONObject Bid field is null");
+      return null;
+    }
+
     ContentProviderOperation.Builder builder = ContentProviderOperation.newInsert(
         QuoteProvider.Quotes.CONTENT_URI);
     try {
