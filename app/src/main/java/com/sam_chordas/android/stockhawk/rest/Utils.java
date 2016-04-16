@@ -28,9 +28,9 @@ public class Utils {
         jsonObject = jsonObject.getJSONObject("query");
         int count = Integer.parseInt(jsonObject.getString("count"));
         if (count == 1){
-          jsonObject = jsonObject.getJSONObject("results")
-              .getJSONObject("quote");
+          jsonObject = jsonObject.getJSONObject("results").getJSONObject("quote");
           ContentProviderOperation operation = buildBatchOperation(jsonObject);
+          // only add valid stock quotes into the database
           if (operation != null)
             batchOperations.add(operation);
         } else{
@@ -73,14 +73,11 @@ public class Utils {
   }
 
   public static ContentProviderOperation buildBatchOperation(JSONObject jsonObject){
-    // invalid quote will have null Bid field in the JSONObject
-    if (jsonObject.isNull("Bid")) {
-      Log.d("NGUYEN", "JSONObject Bid field is null");
+    // invalid stock symbol will result in a JSONObject with a null Bid field
+    if (jsonObject.isNull("Bid"))
       return null;
-    }
 
-    ContentProviderOperation.Builder builder = ContentProviderOperation.newInsert(
-        QuoteProvider.Quotes.CONTENT_URI);
+    ContentProviderOperation.Builder builder = ContentProviderOperation.newInsert(QuoteProvider.Quotes.CONTENT_URI);
     try {
       String change = jsonObject.getString("Change");
       builder.withValue(QuoteColumns.SYMBOL, jsonObject.getString("symbol"));
@@ -94,7 +91,6 @@ public class Utils {
       }else{
         builder.withValue(QuoteColumns.ISUP, 1);
       }
-
     } catch (JSONException e){
       e.printStackTrace();
     }

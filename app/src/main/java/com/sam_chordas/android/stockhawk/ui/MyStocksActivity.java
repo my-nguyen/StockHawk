@@ -39,6 +39,7 @@ import com.sam_chordas.android.stockhawk.touch_helper.SimpleItemTouchHelperCallb
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
 
@@ -112,9 +113,8 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
                       new String[] { QuoteColumns.SYMBOL }, QuoteColumns.SYMBOL + "= ?",
                       new String[] { input.toString() }, null);
                   if (c.getCount() != 0) {
-                    Toast toast =
-                        Toast.makeText(MyStocksActivity.this, "This stock is already saved!",
-                            Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(MyStocksActivity.this,
+                          "This stock is already saved!", Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.CENTER, Gravity.CENTER, 0);
                     toast.show();
                     return;
@@ -130,7 +130,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
         } else {
           networkToast();
         }
-
       }
     });
 
@@ -172,10 +171,9 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     mEventBus.unregister(this);
   }
 
-  @Subscribe
+  @Subscribe(threadMode = ThreadMode.MAIN)
   public void onEvent(QueryEvent event) {
-    Log.d("NGUYEN", "event: " + event.mMessage);
-    // Toast.makeText(this, "got a toast", Toast.LENGTH_LONG).show();
+    Toast.makeText(this, event.mMessage, Toast.LENGTH_LONG).show();
   }
 
   private Boolean isNetworkAvailable() {
