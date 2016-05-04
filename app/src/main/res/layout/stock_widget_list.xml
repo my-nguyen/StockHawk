@@ -1,0 +1,85 @@
+<!DOCTYPE FrameLayout [
+    <!ELEMENT FrameLayout (LinearLayout)*>
+    <!ATTLIST FrameLayout
+        xmlns:android CDATA #REQUIRED
+        android:layout_width CDATA #REQUIRED
+        android:layout_height CDATA #REQUIRED
+        android:layout_margin CDATA #REQUIRED>
+    <!ELEMENT LinearLayout (LinearLayout|ImageView|TextView|ListView)*>
+    <!ATTLIST LinearLayout
+        android:background CDATA #REQUIRED
+        android:id CDATA #IMPLIED
+        android:layout_height CDATA #REQUIRED
+        android:layout_width CDATA #REQUIRED
+        android:orientation CDATA #REQUIRED
+        android:paddingLeft CDATA #IMPLIED
+        android:paddingRight CDATA #IMPLIED>
+    <!ELEMENT ImageView (#PCDATA)>
+    <!ATTLIST ImageView
+        android:id CDATA #REQUIRED
+        android:layout_width CDATA #REQUIRED
+        android:layout_height CDATA #REQUIRED
+        android:layout_gravity CDATA #REQUIRED
+        android:src CDATA #REQUIRED>
+    <!ELEMENT TextView (#PCDATA)>
+    <!ATTLIST TextView
+        android:layout_width CDATA #REQUIRED
+        android:layout_height CDATA #REQUIRED
+        android:text CDATA #REQUIRED
+        android:layout_gravity CDATA #REQUIRED
+        android:textColor CDATA #REQUIRED
+        android:textAppearance CDATA #REQUIRED
+        android:textStyle CDATA #REQUIRED
+        android:paddingStart CDATA #REQUIRED
+        android:paddingLeft CDATA #REQUIRED
+        android:paddingEnd CDATA #REQUIRED
+        android:paddingRight CDATA #REQUIRED>
+    <!ELEMENT ListView (#PCDATA)>
+    <!ATTLIST ListView
+        android:id CDATA #REQUIRED
+        android:layout_width CDATA #REQUIRED
+        android:layout_height CDATA #REQUIRED>
+    ]>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:layout_margin="@dimen/widget_margin">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#bbDEDFDE"
+        android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/widget_layout_main"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#aaDEDFDE"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp">
+            <ImageView
+                android:id="@+id/widget_img_launcher"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_vertical"
+                android:src="@mipmap/ic_launcher"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Stock Hawk"
+                android:layout_gravity="center_vertical"
+                android:textColor="@android:color/black"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold"
+                android:paddingStart="@dimen/widget_header_padding"
+                android:paddingLeft="@dimen/widget_header_padding"
+                android:paddingEnd="@dimen/widget_header_padding"
+                android:paddingRight="@dimen/widget_header_padding"/>
+        </LinearLayout>
+        <ListView
+            android:id="@+id/widget_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </ListView>
+    </LinearLayout>
+</FrameLayout>
