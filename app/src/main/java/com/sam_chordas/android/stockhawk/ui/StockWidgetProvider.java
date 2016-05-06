@@ -10,7 +10,7 @@ import android.support.annotation.NonNull;
 import android.widget.RemoteViews;
 
 import com.sam_chordas.android.stockhawk.R;
-import com.sam_chordas.android.stockhawk.service.WidgetService;
+import com.sam_chordas.android.stockhawk.service.WidgetRemoteViewsService;
 
 /**
  * Created by My on 4/15/2016.
@@ -38,13 +38,13 @@ public class StockWidgetProvider extends AppWidgetProvider {
 
    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
    private void setRemoteAdapter(Context context, @NonNull final RemoteViews views) {
-      Intent intent = new Intent(context, WidgetService.class);
+      Intent intent = new Intent(context, WidgetRemoteViewsService.class);
       views.setRemoteAdapter(R.id.widget_list, intent);
    }
 
    @SuppressWarnings("deprecation")
    private void setRemoteAdapterV11(Context context, @NonNull final RemoteViews views) {
-      Intent intent = new Intent(context, WidgetService.class);
+      Intent intent = new Intent(context, WidgetRemoteViewsService.class);
       views.setRemoteAdapter(0, R.id.widget_list, intent);
    }
 }
