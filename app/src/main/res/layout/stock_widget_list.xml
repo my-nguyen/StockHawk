@@ -12,8 +12,8 @@
         android:layout_height CDATA #REQUIRED
         android:layout_width CDATA #REQUIRED
         android:orientation CDATA #REQUIRED
-        android:paddingLeft CDATA #IMPLIED
-        android:paddingRight CDATA #IMPLIED>
+        android:paddingStart CDATA #IMPLIED
+        android:paddingEnd CDATA #IMPLIED>
     <!ELEMENT ImageView (#PCDATA)>
     <!ATTLIST ImageView
         android:id CDATA #REQUIRED
@@ -31,9 +31,9 @@
         android:textAppearance CDATA #REQUIRED
         android:textStyle CDATA #REQUIRED
         android:paddingStart CDATA #REQUIRED
-        android:paddingLeft CDATA #REQUIRED
+        android:paddingStart CDATA #REQUIRED
         android:paddingEnd CDATA #REQUIRED
-        android:paddingRight CDATA #REQUIRED>
+        android:paddingEnd CDATA #REQUIRED>
     <!ELEMENT ListView (#PCDATA)>
     <!ATTLIST ListView
         android:id CDATA #REQUIRED
@@ -55,8 +55,8 @@
             android:layout_height="wrap_content"
             android:background="#aaDEDFDE"
             android:orientation="horizontal"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp">
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp">
             <ImageView
                 android:id="@+id/widget_img_launcher"
                 android:layout_width="32dp"
@@ -72,9 +72,7 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textStyle="bold"
                 android:paddingStart="@dimen/widget_header_padding"
-                android:paddingLeft="@dimen/widget_header_padding"
-                android:paddingEnd="@dimen/widget_header_padding"
-                android:paddingRight="@dimen/widget_header_padding"/>
+                android:paddingEnd="@dimen/widget_header_padding"/>
         </LinearLayout>
         <ListView
             android:id="@+id/widget_list"
