@@ -84,6 +84,12 @@ public class QuoteCursorAdapter extends CursorRecyclerViewAdapter<QuoteCursorAda
     return super.getItemCount();
   }
 
+  public Cursor getItem(int position) {
+    Cursor cursor = getCursor();
+    cursor.moveToPosition(position);
+    return cursor;
+  }
+
   public static class ViewHolder extends RecyclerView.ViewHolder
       implements ItemTouchHelperViewHolder, View.OnClickListener{
     public final TextView symbol;

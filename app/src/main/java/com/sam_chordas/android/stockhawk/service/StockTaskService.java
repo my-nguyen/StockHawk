@@ -14,9 +14,6 @@ import com.sam_chordas.android.stockhawk.data.QuoteColumns;
 import com.sam_chordas.android.stockhawk.data.QuoteProvider;
 import com.sam_chordas.android.stockhawk.rest.QueryEvent;
 import com.sam_chordas.android.stockhawk.rest.Utils;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -24,6 +21,10 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * Created by sam_chordas on 9/30/15.
@@ -110,10 +111,9 @@ public class StockTaskService extends GcmTaskService{
 
     if (urlStringBuilder != null){
       urlString = urlStringBuilder.toString();
-      Log.d("NGUYEN", "URL: " + urlString);
+      Log.d("NGUYEN", "StockTaskService, urlString: " + urlString);
       try{
         getResponse = fetchData(urlString);
-        Log.d("NGUYEN", "JSON: " + getResponse);
         result = GcmNetworkManager.RESULT_SUCCESS;
         try {
           ContentValues contentValues = new ContentValues();
@@ -124,9 +124,9 @@ public class StockTaskService extends GcmTaskService{
           }
           ArrayList list = Utils.quoteJsonToContentVals(getResponse);
           if (list.size() == 0) {
-            EventBus bus = EventBus.getDefault();
             String symbol = params.getExtras().getString("symbol");
-            bus.post(new QueryEvent("Invalid stock symbol \"" + symbol + "\""));
+            // publish a QueryEvent to subscribers
+            EventBus.getDefault().post(new QueryEvent("Invalid stock symbol \"" + symbol + "\""));
           }
           else
             mContext.getContentResolver().applyBatch(QuoteProvider.AUTHORITY, list);

@@ -60,7 +60,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
   private Context mContext;
   private Cursor mCursor;
   boolean isConnected;
-  private EventBus mEventBus;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +69,6 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     mContext = this;
     isConnected = isNetworkAvailable() && isOnline();
 
-    mEventBus = EventBus.getDefault();
     // The intent service is for executing immediate pulls from the Yahoo API
     // GCMTaskService can only schedule tasks, they cannot execute immediately
     mServiceIntent = new Intent(this, StockIntentService.class);
@@ -91,8 +89,10 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
     recyclerView.addOnItemTouchListener(new RecyclerViewItemClickListener(this,
             new RecyclerViewItemClickListener.OnItemClickListener() {
               @Override public void onItemClick(View v, int position) {
-                //TODO:
-                // do something on item click
+                Cursor cursor = mCursorAdapter.getItem(position);
+                String symbol = cursor.getString(cursor.getColumnIndex(QuoteColumns.SYMBOL));
+                Intent intent = StockChartActivity.newIntent(MyStocksActivity.this, symbol);
+                startActivity(intent);
               }
             }));
     recyclerView.setAdapter(mCursorAdapter);
@@ -162,15 +162,18 @@ public class MyStocksActivity extends AppCompatActivity implements LoaderManager
   @Override
   protected void onStart() {
     super.onStart();
-    mEventBus.register(this);
+    // subscribe to the EventBus
+    EventBus.getDefault().register(this);
   }
 
   @Override
   protected void onStop() {
     super.onStop();
-    mEventBus.unregister(this);
+    // unsubscribe from the EventBus
+    EventBus.getDefault().unregister(this);
   }
 
+  // this is the subscriber to the EventBus; it runs on the main thread
   @Subscribe(threadMode = ThreadMode.MAIN)
   public void onEvent(QueryEvent event) {
     Toast.makeText(this, event.mMessage, Toast.LENGTH_LONG).show();
