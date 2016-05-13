@@ -19,7 +19,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import okhttp3.Call;
@@ -45,11 +48,9 @@ public class StockChartActivity extends AppCompatActivity {
       // create Request object
       String base = "https://query.yahooapis.com/v1/public/yql";
       final String symbol = getIntent().getStringExtra("SYMBOL");
-      String startDate = "2016-04-01";
-      String endDate = "2016-04-30";
       /// Yahoo historical data stock query is based on https://github.com/swatiag1101/LineGraph
       String query = "select * from yahoo.finance.historicaldata where symbol ='" + symbol
-            + "' and startDate = '" + startDate + "' and endDate = '" + endDate + "'";
+            + "' and startDate = '" + lastMonth() + "' and endDate = '" + yesterday() + "'";
       Uri uri = Uri.parse(base).buildUpon()
             .appendQueryParameter("q", query)
             .appendQueryParameter("format", "json")
@@ -81,19 +82,22 @@ public class StockChartActivity extends AppCompatActivity {
                   try {
                      /// MPChart usage is based on
                      /// https://www.numetriclabz.com/android-line-chart-using-mpandroidchart-tutorial/
-                     // entries is a list of y-values
+                     // list of y-values
                      List<Entry> entries = new ArrayList<>();
-                     // labels is x-axis labels
+                     // x-axis labels
                      List<String> labels = new ArrayList<>();
                      JSONArray jsonArray = new JSONObject(jsonString).getJSONObject("query").getJSONObject("results").getJSONArray("quote");
                      // the jsonArray is in reverse chronological order
-                     for (int i = jsonArray.length()-1; i >=0; i--) {
+                     // for (int i = 0; i < jsonArray.length(); i++) {
+                     for (int i = jsonArray.length()-1; i >= 0; i--) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         // JSON field "Adj_Close" (adjusted close) is chosen instead of field "Close"
-                        float yValue = Float.parseFloat(jsonObject.getString("Adj_Close"));
-                        Entry entry = new Entry(yValue, i);
+                        float adjustedClose = Float.parseFloat(jsonObject.getString("Adj_Close"));
+                        Entry entry = new Entry(adjustedClose, i);
                         entries.add(entry);
-                        labels.add(jsonObject.getString("Date"));
+                        String date = jsonObject.getString("Date");
+                        labels.add(date);
+                        Log.d("NGUYEN", "Close: " + adjustedClose + ", Date: " + date);
                      }
                      // the description at the bottom left of the chart
                      LineDataSet dataSet = new LineDataSet(entries, symbol + " values over the month of April 2016");
@@ -117,5 +121,20 @@ public class StockChartActivity extends AppCompatActivity {
       Intent intent = new Intent(context, StockChartActivity.class);
       intent.putExtra("SYMBOL", symbol);
       return intent;
+   }
+
+   private String yesterday() {
+      return getDate(Calendar.DATE);
+   }
+
+   private String lastMonth() {
+      return getDate(Calendar.MONTH);
+   }
+
+   private String getDate(int field) {
+      Calendar calendar = Calendar.getInstance();
+      calendar.add(field, -1);
+      DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+      return format.format(calendar.getTime());
    }
 }
