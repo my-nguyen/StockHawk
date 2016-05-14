@@ -54,9 +54,9 @@ public class StockChartActivity extends AppCompatActivity {
       Uri uri = Uri.parse(base).buildUpon()
             .appendQueryParameter("q", query)
             .appendQueryParameter("format", "json")
-            .appendQueryParameter("diagnostics", "true")
+            // .appendQueryParameter("diagnostics", "true")
             .appendQueryParameter("env", "store://datatables.org/alltableswithkeys")
-            .appendQueryParameter("callback", "")
+            // .appendQueryParameter("callback", "")
             .build();
       String url = uri.toString();
       Log.d("NGUYEN", "StockChartActivity, url: " + url);
@@ -88,22 +88,22 @@ public class StockChartActivity extends AppCompatActivity {
                      List<String> labels = new ArrayList<>();
                      JSONArray jsonArray = new JSONObject(jsonString).getJSONObject("query").getJSONObject("results").getJSONArray("quote");
                      // the jsonArray is in reverse chronological order
-                     // for (int i = 0; i < jsonArray.length(); i++) {
+                     int j = 0;
                      for (int i = jsonArray.length()-1; i >= 0; i--) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         // JSON field "Adj_Close" (adjusted close) is chosen instead of field "Close"
                         float adjustedClose = Float.parseFloat(jsonObject.getString("Adj_Close"));
-                        Entry entry = new Entry(adjustedClose, i);
+                        Entry entry = new Entry(adjustedClose, j);
                         entries.add(entry);
                         String date = jsonObject.getString("Date");
                         labels.add(date);
-                        Log.d("NGUYEN", "Close: " + adjustedClose + ", Date: " + date);
+                        j++;
                      }
                      // the description at the bottom left of the chart
-                     LineDataSet dataSet = new LineDataSet(entries, symbol + " values over the month of April 2016");
+                     LineDataSet dataSet = new LineDataSet(entries, symbol + " values over the past thirty days");
                      LineData lineData = new LineData(labels, dataSet);
                      // the description at the bottom right of the chart, in smaller font size, and
-                     // and situated higher than dataSet description
+                     // situated higher than dataSet description
                      lineChart.setDescription("Mother-Father!!!");
                      lineChart.setData(lineData);
                      // without animateY(), the chart won't show!
